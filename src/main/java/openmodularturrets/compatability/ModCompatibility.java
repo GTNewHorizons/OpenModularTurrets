@@ -15,7 +15,9 @@ import openmodularturrets.reference.ModInfo;
  */
 public class ModCompatibility {
 
-    public static boolean IGWModLoaded = false;
+    private ModCompatibility() {
+    }
+
     public static boolean ThermalExpansionLoaded = false;
     public static boolean EnderIOLoaded = false;
     public static boolean MekanismLoaded = false;
@@ -23,7 +25,6 @@ public class ModCompatibility {
     public static boolean OpenComputersLoaded = false;
     public static boolean ComputercraftLoaded = false;
     public static boolean IC2Loaded = false;
-    public static IGWHandler igwHandler;
     private static Logger logger;
 
     public static void checkForMods() {
@@ -55,8 +56,6 @@ public class ModCompatibility {
             logger.info("Enabling LUA integration. (Found OpenComputers/ComputerCraft)");
         }
         IC2Loaded = Loader.isModLoaded("IC2");
-
-        IGWModLoaded = Loader.isModLoaded("IGWMod");
     }
 
     private static void addVersionCheckerInfo() {

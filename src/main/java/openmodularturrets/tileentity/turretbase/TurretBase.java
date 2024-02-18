@@ -23,8 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import api.undercurrent.iface.IUCTile;
-import api.undercurrent.iface.UCTileDefinition;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.Optional;
@@ -44,7 +42,6 @@ import openmodularturrets.handler.ConfigHandler;
 import openmodularturrets.handler.NetworkingHandler;
 import openmodularturrets.network.messages.MessageTurretBase;
 import openmodularturrets.tileentity.TileEntityContainer;
-import openmodularturrets.ucdefinitions.TurretBaseUCDefinition;
 import openmodularturrets.util.MathUtil;
 import openmodularturrets.util.TurretHeadUtil;
 import thaumcraft.api.aspects.Aspect;
@@ -61,7 +58,7 @@ import thaumcraft.api.visnet.VisNetHandler;
         @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2") })
 
 public abstract class TurretBase extends TileEntityContainer implements IEnergyHandler, SimpleComponent,
-        ISidedInventory, IEssentiaTransport, IAspectContainer, IPeripheral, IEnergySink, IUCTile {
+        ISidedInventory, IEssentiaTransport, IAspectContainer, IPeripheral, IEnergySink {
 
     public int trustedPlayerIndex = 0;
     public ItemStack camoStack;
@@ -1204,10 +1201,5 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         getRedstone,
         setInverted,
         getType
-    }
-
-    @Override
-    public UCTileDefinition getTileDefinition() throws Exception {
-        return new TurretBaseUCDefinition(this);
     }
 }
