@@ -15,8 +15,7 @@ import openmodularturrets.reference.ModInfo;
  */
 public class ModCompatibility {
 
-    private ModCompatibility() {
-    }
+    private ModCompatibility() {}
 
     public static boolean ThermalExpansionLoaded = false;
     public static boolean EnderIOLoaded = false;
