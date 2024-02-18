@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -20,6 +21,8 @@ import openmodularturrets.tileentity.LeverTileEntity;
 import openmodularturrets.tileentity.turretbase.TurretBaseTierOneTileEntity;
 
 public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
+
+    private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
     public LeverBlock() {
         super(Material.rock);
@@ -65,7 +68,7 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
         if (par1World.getTileEntity(par2, par3, par4 - 1) instanceof TurretBaseTierOneTileEntity) {
             l = 180;
         }
-        int shu = MathHelper.floor_double((double) (l * 4.0F / 360.0F) + 0.5D) & 3;
+        int shu = MathHelper.floor_double((l * 4.0F / 360.0F) + 0.5D) & 3;
         par1World.setBlockMetadataWithNotify(par2, par3, par4, shu, 2);
     }
 
@@ -123,6 +126,11 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
             }
         }
         return true;
+    }
+
+    @Override
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World worldIn, int x, int y, int z) {
+        return boundingBox;
     }
 
     @Override

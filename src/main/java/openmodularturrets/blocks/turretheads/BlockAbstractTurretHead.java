@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -12,6 +13,8 @@ import openmodularturrets.tileentity.turretbase.TurretBase;
 
 abstract class BlockAbstractTurretHead extends Block implements ITileEntityProvider {
 
+    private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
+
     BlockAbstractTurretHead() {
         super(Material.glass);
 
@@ -19,7 +22,7 @@ abstract class BlockAbstractTurretHead extends Block implements ITileEntityProvi
         this.setBlockUnbreakable();
         this.setResistance(6000000.0F);
         this.setStepSound(Block.soundTypeStone);
-        this.setBlockBounds(0.2F, 0.0F, 0.2F, 0.8F, 1F, 0.8F);
+        this.setBlockBounds(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
     }
 
     @Override
@@ -40,6 +43,11 @@ abstract class BlockAbstractTurretHead extends Block implements ITileEntityProvi
                 || world.getTileEntity(x, y - 1, z) instanceof TurretBase
                 || world.getTileEntity(x, y, z + 1) instanceof TurretBase
                 || world.getTileEntity(x, y, z - 1) instanceof TurretBase;
+    }
+
+    @Override
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World worldIn, int x, int y, int z) {
+        return boundingBox;
     }
 
     @Override
