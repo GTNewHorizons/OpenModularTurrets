@@ -12,7 +12,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
 import openmodularturrets.ModularTurrets;
 import openmodularturrets.blocks.util.BlockAbstract;
 import openmodularturrets.reference.ModInfo;
@@ -20,16 +19,17 @@ import openmodularturrets.reference.Names;
 import openmodularturrets.tileentity.LeverTileEntity;
 import openmodularturrets.tileentity.turretbase.TurretBaseTierOneTileEntity;
 
-public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
+import static net.minecraftforge.common.util.ForgeDirection.*;
 
-    private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
+public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
+    private static final AxisAlignedBB BOUNDING_BOX = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
     public LeverBlock() {
         super(Material.rock);
         this.setBlockName(Names.Blocks.unlocalisedLever);
         this.setCreativeTab(ModularTurrets.modularTurretsTab);
         this.setHardness(2F);
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        this.setBlockBounds(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
         this.setResistance(15F);
         this.setStepSound(Block.soundTypeStone);
     }
@@ -54,7 +54,7 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
 
     @Override
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase,
-            ItemStack par6ItemStack) {
+                                ItemStack par6ItemStack) {
         float l = 0;
         if (par1World.getTileEntity(par2 + 1, par3, par4) instanceof TurretBaseTierOneTileEntity) {
             l = 270F;
@@ -72,65 +72,77 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
         par1World.setBlockMetadataWithNotify(par2, par3, par4, shu, 2);
     }
 
+    public TurretBaseTierOneTileEntity getTurretBase(World world, int x, int y, int z) {
+        int metadata = world.getBlockMetadata(x, y, z);
+        ForgeDirection turretDirection = decipherMetadata(metadata);
+        int xReal = x;
+        int zReal = z;
+        switch (turretDirection) {
+            case NORTH:
+                z--; // Assuming North is negative Z in your world
+                break;
+            case SOUTH:
+                z++; // And South is positive Z
+                break;
+            case EAST:
+                x++; // East is positive X
+                break;
+            case WEST:
+                x--; // West is negative X
+                break;
+            default:
+                throw new IllegalStateException("The metadata led to an unknown direction. This shouldn't happen, see?");
+        }
+
+        if (!(world.getTileEntity(x, y, z) instanceof TurretBaseTierOneTileEntity)) {
+            this.breakBlock(world, xReal, y, zReal, this, world.getBlockMetadata(xReal, y, zReal));
+        }
+
+        return (TurretBaseTierOneTileEntity) world.getTileEntity(x, y, z);
+    }
+
+    private static ForgeDirection decipherMetadata(int metadata) {
+        // Your metadata deciphering logic goes here
+        // For now, let's just pretend it's a simple mapping
+        switch (metadata) {
+            case 0:
+                return SOUTH;
+            case 1:
+                return WEST;
+            case 2:
+                return NORTH;
+            case 3:
+                return EAST;
+            default:
+                throw new IllegalArgumentException("Bad metadata, kid. It's like reading a book with half the pages torn out.");
+        }
+    }
+
     @Override
     public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer,
-            int par6, float par7, float par8, float par9) {
-        TurretBaseTierOneTileEntity base;
+                                    int par6, float par7, float par8, float par9) {
+        TurretBaseTierOneTileEntity base = getTurretBase(par1World, par2, par3, par4);
         LeverTileEntity lever = (LeverTileEntity) par1World.getTileEntity(par2, par3, par4);
 
-        if ((par1World.getBlockMetadata(par2, par3, par4) * 90) == 0
-                && par1World.getTileEntity(par2, par3, par4 + 1) instanceof TurretBaseTierOneTileEntity) {
-            base = (TurretBaseTierOneTileEntity) par1World.getTileEntity(par2, par3, par4 + 1);
-            if (base != null) {
-                lever.isTurning = true;
-                if (lever.rotation == 0F) {
-                    par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
-                    base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
-                }
+        if (base != null) {
+            lever.isTurning = true;
+            if (lever.rotation == 0F) {
+                par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
+                base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
             }
         }
 
-        if ((par1World.getBlockMetadata(par2, par3, par4) * 90) == 90
-                && par1World.getTileEntity(par2 - 1, par3, par4) instanceof TurretBaseTierOneTileEntity) {
-            base = (TurretBaseTierOneTileEntity) par1World.getTileEntity(par2 - 1, par3, par4);
-            if (base != null) {
-                lever.isTurning = true;
-                if (lever.rotation == 0F) {
-                    par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
-                    base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
-                }
-            }
-        }
-
-        if ((par1World.getBlockMetadata(par2, par3, par4) * 90) == 180
-                && par1World.getTileEntity(par2, par3, par4 - 1) instanceof TurretBaseTierOneTileEntity) {
-            base = (TurretBaseTierOneTileEntity) par1World.getTileEntity(par2, par3, par4 - 1);
-            if (base != null) {
-                lever.isTurning = true;
-                if (lever.rotation == 0F) {
-                    par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
-                    base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
-                }
-            }
-        }
-
-        if ((par1World.getBlockMetadata(par2, par3, par4) * 90) == 270
-                && par1World.getTileEntity(par2 + 1, par3, par4) instanceof TurretBaseTierOneTileEntity) {
-            base = (TurretBaseTierOneTileEntity) par1World.getTileEntity(par2 + 1, par3, par4);
-            if (base != null) {
-                lever.isTurning = true;
-                if (lever.rotation == 0F) {
-                    par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
-                    base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
-                }
-            }
-        }
         return true;
     }
 
     @Override
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World worldIn, int x, int y, int z) {
-        return boundingBox;
+        return BOUNDING_BOX;
+    }
+
+    @Override
+    public boolean isBlockNormalCube() {
+        return false;
     }
 
     @Override
