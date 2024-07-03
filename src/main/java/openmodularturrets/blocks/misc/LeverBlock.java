@@ -24,6 +24,8 @@ import static net.minecraftforge.common.util.ForgeDirection.*;
 public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
     private static final AxisAlignedBB BOUNDING_BOX = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
+    private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
+
     public LeverBlock() {
         super(Material.rock);
         this.setBlockName(Names.Blocks.unlocalisedLever);
