@@ -1,5 +1,7 @@
 package openmodularturrets.blocks.misc;
 
+import static net.minecraftforge.common.util.ForgeDirection.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -12,6 +14,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import openmodularturrets.ModularTurrets;
 import openmodularturrets.blocks.util.BlockAbstract;
 import openmodularturrets.reference.ModInfo;
@@ -19,12 +22,9 @@ import openmodularturrets.reference.Names;
 import openmodularturrets.tileentity.LeverTileEntity;
 import openmodularturrets.tileentity.turretbase.TurretBaseTierOneTileEntity;
 
-import static net.minecraftforge.common.util.ForgeDirection.*;
-
 public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
-    private static final AxisAlignedBB BOUNDING_BOX = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
-    private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
+    private static final AxisAlignedBB BOUNDING_BOX = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
     public LeverBlock() {
         super(Material.rock);
@@ -56,7 +56,7 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
 
     @Override
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase,
-                                ItemStack par6ItemStack) {
+            ItemStack par6ItemStack) {
         float l = 0;
         if (par1World.getTileEntity(par2 + 1, par3, par4) instanceof TurretBaseTierOneTileEntity) {
             l = 270F;
@@ -93,7 +93,8 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
                 x--; // West is negative X
                 break;
             default:
-                throw new IllegalStateException("The metadata led to an unknown direction. This shouldn't happen, see?");
+                throw new IllegalStateException(
+                        "The metadata led to an unknown direction. This shouldn't happen, see?");
         }
 
         if (!(world.getTileEntity(x, y, z) instanceof TurretBaseTierOneTileEntity)) {
@@ -116,13 +117,14 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
             case 3:
                 return EAST;
             default:
-                throw new IllegalArgumentException("Bad metadata, kid. It's like reading a book with half the pages torn out.");
+                throw new IllegalArgumentException(
+                        "Bad metadata, kid. It's like reading a book with half the pages torn out.");
         }
     }
 
     @Override
     public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer,
-                                    int par6, float par7, float par8, float par9) {
+            int par6, float par7, float par8, float par9) {
         TurretBaseTierOneTileEntity base = getTurretBase(par1World, par2, par3, par4);
         LeverTileEntity lever = (LeverTileEntity) par1World.getTileEntity(par2, par3, par4);
 
