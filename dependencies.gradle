@@ -3,8 +3,8 @@
 dependencies {
     implementation("curse.maven:cofh-lib-220333:2388748")
 
-    compileOnly 'com.github.GTNewHorizons:waila:1.7.3:dev'
-    compileOnly 'com.github.GTNewHorizons:NotEnoughItems:2.5.27-GTNH:dev'
+    compileOnly 'com.github.GTNewHorizons:waila:1.8.1:dev'
+    compileOnly 'com.github.GTNewHorizons:NotEnoughItems:2.6.14-GTNH:dev'
     compileOnly 'com.github.GTNewHorizons:OpenComputers:1.10.11-GTNH:dev'
 
     compileOnly 'net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev'
