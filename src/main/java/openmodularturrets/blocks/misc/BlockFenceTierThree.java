@@ -30,19 +30,18 @@ public class BlockFenceTierThree extends BlockAbstractMiscPane {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        super.registerBlockIcons(p_149651_1_);
-        blockIcon = p_149651_1_.registerIcon(ModInfo.ID.toLowerCase() + ":fenceTierThree");
+    public void registerBlockIcons(IIconRegister reg) {
+        super.registerBlockIcons(reg);
+        blockIcon = reg.registerIcon(ModInfo.ID.toLowerCase() + ":fenceTierThree");
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_,
-            Entity p_149670_5_) {
-        if (!(p_149670_5_ instanceof EntityItem)) p_149670_5_.attackEntityFrom(DamageSource.cactus, 3);
+    public void onEntityCollidedWithBlock(World worldIn, int x, int y, int z, Entity entityIn) {
+        if (!(entityIn instanceof EntityItem)) entityIn.attackEntityFrom(DamageSource.cactus, 3);
     }
 
     @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+    public Item getItemDropped(int meta, Random random, int fortune) {
         return Item.getItemFromBlock(Blocks.fenceTierThree);
     }
 }

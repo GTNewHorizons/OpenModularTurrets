@@ -118,7 +118,7 @@ class TurretBaseAbstractGui extends GuiContainer implements INEIGuiHandler {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {}
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {}
 
     private void sendChangeToServer() {
         MessageAdjustYAxisDetect message = new MessageAdjustYAxisDetect(

@@ -53,7 +53,7 @@ public abstract class TurretProjectile extends EntityThrowable {
     }
 
     @Override
-    public boolean writeToNBTOptional(NBTTagCompound p_70039_1_) {
+    public boolean writeToNBTOptional(NBTTagCompound tagCompund) {
         this.setDead();
         return false;
     }

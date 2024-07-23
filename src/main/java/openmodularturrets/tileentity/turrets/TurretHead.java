@@ -177,10 +177,10 @@ public abstract class TurretHead extends TileEntity {
         this.rotationXZ = rotationXZ;
     }
 
-    private float getDistanceToEntity(Entity p_70032_1_) {
-        float f = (float) (this.xCoord - p_70032_1_.posX);
-        float f1 = (float) (this.yCoord - p_70032_1_.posY);
-        float f2 = (float) (this.zCoord - p_70032_1_.posZ);
+    private float getDistanceToEntity(Entity entityIn) {
+        float f = (float) (this.xCoord - entityIn.posX);
+        float f1 = (float) (this.yCoord - entityIn.posY);
+        float f2 = (float) (this.zCoord - entityIn.posZ);
         return MathHelper.sqrt_float(f * f + f1 * f1 + f2 * f2);
     }
 

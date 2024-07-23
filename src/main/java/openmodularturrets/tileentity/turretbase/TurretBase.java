@@ -1,9 +1,6 @@
 package openmodularturrets.tileentity.turretbase;
 
-import static openmodularturrets.util.PlayerUtil.getPlayerNameFromUUID;
-import static openmodularturrets.util.PlayerUtil.getPlayerUIDUnstable;
-import static openmodularturrets.util.PlayerUtil.getPlayerUUID;
-import static openmodularturrets.util.PlayerUtil.isPlayerNameValid;
+import static openmodularturrets.util.PlayerUtil.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,7 +150,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
     @Optional.Method(modid = "IC2")
     @Override
     public int getSinkTier() {
-        return 4;
+        return Integer.MAX_VALUE;
     }
 
     @Optional.Method(modid = "IC2")
@@ -222,31 +219,26 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         waitForTrustedPlayer = false;
         TrustedPlayer trustedPlayer = new TrustedPlayer(name);
         trustedPlayer.uuid = getPlayerUUID(name);
+
         if (!isPlayerNameValid(name)) {
             return false;
         }
 
-        if (ConfigHandler.offlineModeSupport) {
-            if (trustedPlayer.getName().equals(getOwnerName())) {
-                return false;
-            }
-
-        } else {
-            if (trustedPlayer.uuid == null || trustedPlayer.uuid.toString().equals(getOwnerName())) {
-                return false;
-            }
+        if (ConfigHandler.offlineModeSupport && trustedPlayer.getName().equals(getOwnerName())) {
+            return false;
+        }
+        if (trustedPlayer.uuid == null || trustedPlayer.uuid.toString().equals(getOwnerName())) {
+            return false;
         }
 
         if (trustedPlayer.uuid != null || ConfigHandler.offlineModeSupport) {
             for (TrustedPlayer player : trustedPlayers) {
                 if (ConfigHandler.offlineModeSupport) {
-                    if (player.getName().toLowerCase().equals(name.toLowerCase())
-                            || player.getName().equals(getOwnerName())) {
+                    if (player.getName().equalsIgnoreCase(name) || player.getName().equals(getOwnerName())) {
                         return false;
                     }
                 } else {
-                    if (player.getName().toLowerCase().equals(name.toLowerCase())
-                            || trustedPlayer.uuid.toString().equals(owner)) {
+                    if (player.getName().equalsIgnoreCase(name) || trustedPlayer.uuid.toString().equals(owner)) {
                         return false;
                     }
                 }
@@ -555,29 +547,28 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
             this.storage.setCapacity(getMaxEnergyStorageWithExtenders());
 
             // Thaumcraft
-            if (ModCompatibility.ThaumcraftLoaded && TurretHeadUtil.hasPotentiaUpgradeAddon(this)) {
-                if (amountOfPotentia > 0.05F && !(storage.getMaxEnergyStored() - storage.getEnergyStored() == 0)) {
-                    if (VisNetHandler.drainVis(worldObj, xCoord, yCoord, zCoord, Aspect.ORDER, 5) == 5) {
-                        this.amountOfPotentia = this.amountOfPotentia - 0.05F;
-                        this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() * 5));
-                    } else {
-                        this.amountOfPotentia = this.amountOfPotentia - 0.05F;
-                        this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() / 2));
-                    }
+            if (ModCompatibility.ThaumcraftLoaded && TurretHeadUtil.hasPotentiaUpgradeAddon(this)
+                    && amountOfPotentia > 0.05F
+                    && (storage.getMaxEnergyStored() - storage.getEnergyStored() != 0)) {
+                if (VisNetHandler.drainVis(worldObj, xCoord, yCoord, zCoord, Aspect.ORDER, 5) == 5) {
+                    this.amountOfPotentia = this.amountOfPotentia - 0.05F;
+                    this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() * 5));
+                } else {
+                    this.amountOfPotentia = this.amountOfPotentia - 0.05F;
+                    this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() / 2f));
                 }
             }
 
-            if (ModCompatibility.IC2Loaded && ConfigHandler.EUSupport) {
-                if (storage.getMaxEnergyStored() != storage.getEnergyStored() && storageEU > 0) {
-                    storage.modifyEnergyStored(
-                            MathUtil.truncateDoubleToInt(
-                                    Math.min(
-                                            storage.getMaxEnergyStored() - storage.getEnergyStored(),
-                                            storageEU * ConfigHandler.EUtoRFRatio)));
-                    storageEU -= Math.min(
-                            (storage.getMaxEnergyStored() - storage.getEnergyStored()) / ConfigHandler.EUtoRFRatio,
-                            storageEU * ConfigHandler.EUtoRFRatio);
-                }
+            if (ModCompatibility.IC2Loaded && ConfigHandler.EUSupport
+                    && storage.getMaxEnergyStored() != storage.getEnergyStored()
+                    && storageEU > 0) {
+                int energyToAdd = MathUtil.truncateDoubleToInt(
+                        Math.min(
+                                storage.getMaxEnergyStored() - storage.getEnergyStored(),
+                                storageEU * ConfigHandler.EUtoRFRatio));
+                storage.modifyEnergyStored(energyToAdd);
+
+                storageEU -= energyToAdd / ConfigHandler.EUtoRFRatio;
             }
 
             if (ticks == 20) {
@@ -678,6 +669,11 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
     }
 
     @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        return true;
+    }
+
+    @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return true;
     }
@@ -696,11 +692,6 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         if (this.yAxisDetect < 0) {
             this.yAxisDetect = 0;
         }
-    }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        return true;
     }
 
     @Override

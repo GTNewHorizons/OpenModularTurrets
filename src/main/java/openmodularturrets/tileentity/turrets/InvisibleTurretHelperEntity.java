@@ -21,7 +21,7 @@ class InvisibleTurretHelperEntity extends EntityLivingBase {
     }
 
     @Override
-    public void setCurrentItemOrArmor(int p_70062_1_, ItemStack p_70062_2_) {}
+    public void setCurrentItemOrArmor(int slotIn, ItemStack itemStackIn) {}
 
     @Override
     public ItemStack[] getLastActiveItems() {
