@@ -60,7 +60,7 @@ public class ModelRelativisticTurret extends ModelBase {
         Crystal.setRotationPoint(0F, 15F, 0F);
         Crystal.setTextureSize(64, 64);
         Crystal.mirror = true;
-        setRotation(Crystal, 0.7853982F, 0.7853982F, 0.7853982F);
+        setRotation(Crystal, ((float) Math.PI / 4F), ((float) Math.PI / 4F), ((float) Math.PI / 4F));
     }
 
     @Override

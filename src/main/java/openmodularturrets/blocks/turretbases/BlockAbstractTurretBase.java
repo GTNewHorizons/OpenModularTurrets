@@ -87,10 +87,9 @@ public abstract class BlockAbstractTurretBase extends BlockAbstractContainer {
     }
 
     @Override
-    public void randomDisplayTick(World p_149734_1_, int p_149734_2_, int p_149734_3_, int p_149734_4_,
-            Random p_149734_5_) {
-        if (p_149734_1_.isRemote) {
-            Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(p_149734_2_, p_149734_3_, p_149734_4_);
+    public void randomDisplayTick(World worldIn, int x, int y, int z, Random random) {
+        if (worldIn.isRemote) {
+            Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(x, y, z);
         }
     }
 
@@ -130,12 +129,12 @@ public abstract class BlockAbstractTurretBase extends BlockAbstractContainer {
     }
 
     @Override
-    public IIcon getIcon(IBlockAccess p_149673_1_, int p_149673_2_, int p_149673_3_, int p_149673_4_, int p_149673_5_) {
-        TurretBase base = (TurretBase) p_149673_1_.getTileEntity(p_149673_2_, p_149673_3_, p_149673_4_);
+    public IIcon getIcon(IBlockAccess worldIn, int x, int y, int z, int side) {
+        TurretBase base = (TurretBase) worldIn.getTileEntity(x, y, z);
         if (base != null && base.camoStack != null) {
             Block camoBlock = Block.getBlockFromItem(base.camoStack.getItem());
             if (camoBlock != null && camoBlock.renderAsNormalBlock())
-                return camoBlock.getIcon(p_149673_5_, base.camoStack.getItemDamage());
+                return camoBlock.getIcon(side, base.camoStack.getItemDamage());
         }
 
         return blockIcon;

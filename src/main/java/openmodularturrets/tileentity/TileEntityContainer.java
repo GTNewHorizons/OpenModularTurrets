@@ -83,7 +83,7 @@ public class TileEntityContainer extends TileEntityOMT implements IInventory {
     }
 
     @Override
-    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
         return false;
     }
 }

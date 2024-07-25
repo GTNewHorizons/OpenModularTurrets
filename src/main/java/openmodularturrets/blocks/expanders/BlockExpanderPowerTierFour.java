@@ -25,9 +25,9 @@ public class BlockExpanderPowerTierFour extends BlockAbstract implements ITileEn
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        super.registerBlockIcons(p_149651_1_);
-        blockIcon = p_149651_1_.registerIcon(ModInfo.ID.toLowerCase() + ":expanderPowerTierFour");
+    public void registerBlockIcons(IIconRegister reg) {
+        super.registerBlockIcons(reg);
+        blockIcon = reg.registerIcon(ModInfo.ID.toLowerCase() + ":expanderPowerTierFour");
     }
 
     @Override

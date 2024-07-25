@@ -23,7 +23,7 @@ public abstract class BlockAbstractContainer extends BlockContainer {
         super(material);
     }
 
-    public abstract TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_);
+    public abstract TileEntity createNewTileEntity(World worldIn, int meta);
 
     @Override
     public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {

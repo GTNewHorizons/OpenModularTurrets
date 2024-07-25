@@ -21,23 +21,22 @@ public class BlockTeleporterTurret extends BlockAbstractTurretHead {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TeleporterTurretTileEntity();
     }
 
     @Override
-    public void randomDisplayTick(World p_149734_1_, int p_149734_2_, int p_149734_3_, int p_149734_4_,
-            Random p_149734_5_) {
+    public void randomDisplayTick(World worldIn, int x, int y, int z, Random random) {
         if (shouldAnimate) {
             for (int i = 0; i <= 25; i++) {
-                float var21 = (p_149734_5_.nextFloat() - 0.5F) * 0.2F;
-                float var22 = (p_149734_5_.nextFloat() - 0.5F) * 0.2F;
-                float var23 = (p_149734_5_.nextFloat() - 0.5F) * 0.2F;
-                p_149734_1_.spawnParticle(
+                float var21 = (random.nextFloat() - 0.5F) * 0.2F;
+                float var22 = (random.nextFloat() - 0.5F) * 0.2F;
+                float var23 = (random.nextFloat() - 0.5F) * 0.2F;
+                worldIn.spawnParticle(
                         "portal",
-                        p_149734_2_ + 0.5f + p_149734_5_.nextGaussian(),
-                        p_149734_3_ + 0.5f + p_149734_5_.nextGaussian(),
-                        p_149734_4_ + 0.5f + p_149734_5_.nextGaussian(),
+                        x + 0.5f + random.nextGaussian(),
+                        y + 0.5f + random.nextGaussian(),
+                        z + 0.5f + random.nextGaussian(),
                         (double) var21,
                         (double) var22,
                         (double) var23);

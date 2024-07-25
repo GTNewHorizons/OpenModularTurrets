@@ -26,13 +26,13 @@ public class BlockFenceTierOne extends BlockAbstractMiscPane {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        super.registerBlockIcons(p_149651_1_);
-        blockIcon = p_149651_1_.registerIcon(ModInfo.ID.toLowerCase() + ":fenceTierOne");
+    public void registerBlockIcons(IIconRegister reg) {
+        super.registerBlockIcons(reg);
+        blockIcon = reg.registerIcon(ModInfo.ID.toLowerCase() + ":fenceTierOne");
     }
 
     @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+    public Item getItemDropped(int meta, Random random, int fortune) {
         return Item.getItemFromBlock(Blocks.fenceTierOne);
     }
 }
