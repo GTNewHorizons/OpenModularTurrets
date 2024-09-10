@@ -109,14 +109,14 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
-        TurretBaseTierOneTileEntity base = getTurretBase(par1World, par2, par3, par4);
-        LeverTileEntity lever = (LeverTileEntity) par1World.getTileEntity(par2, par3, par4);
-
-        if (base != null) {
+    public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX,
+            float subY, float subZ) {
+        TurretBaseTierOneTileEntity base = getTurretBase(worldIn, x, y, z);
+        TileEntity te = worldIn.getTileEntity(x, y, z);
+        if (base != null && te instanceof LeverTileEntity lever) {
             lever.isTurning = true;
             if (lever.rotation == 0F) {
-                par1World.playSoundEffect(par2, par3, par4, "openmodularturrets:windup", 1.0F, 1.0F);
+                worldIn.playSoundEffect(x, y, z, "openmodularturrets:windup", 1.0F, 1.0F);
                 base.receiveEnergy(ForgeDirection.UNKNOWN, 50, false);
             }
         }
