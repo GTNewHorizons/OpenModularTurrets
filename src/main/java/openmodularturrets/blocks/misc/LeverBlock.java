@@ -79,26 +79,12 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
         ForgeDirection turretDirection = decipherMetadata(metadata);
         int xReal = x;
         int zReal = z;
-        switch (turretDirection) {
-            case NORTH:
-                z--; // Assuming North is negative Z in your world
-                break;
-            case SOUTH:
-                z++; // And South is positive Z
-                break;
-            case EAST:
-                x++; // East is positive X
-                break;
-            case WEST:
-                x--; // West is negative X
-                break;
-            default:
-                throw new IllegalStateException(
-                        "The metadata led to an unknown direction. This shouldn't happen, see?");
-        }
+        x += turretDirection.offsetX;
+        z += turretDirection.offsetZ;
 
         if (!(world.getTileEntity(x, y, z) instanceof TurretBaseTierOneTileEntity)) {
-            this.breakBlock(world, xReal, y, zReal, this, world.getBlockMetadata(xReal, y, zReal));
+            world.setBlockToAir(x, y, z);
+            return null;
         }
 
         return (TurretBaseTierOneTileEntity) world.getTileEntity(x, y, z);
@@ -123,8 +109,7 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
     }
 
     @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer,
-            int par6, float par7, float par8, float par9) {
+    public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
         TurretBaseTierOneTileEntity base = getTurretBase(par1World, par2, par3, par4);
         LeverTileEntity lever = (LeverTileEntity) par1World.getTileEntity(par2, par3, par4);
 
