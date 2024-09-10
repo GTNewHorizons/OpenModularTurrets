@@ -79,23 +79,8 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
         ForgeDirection turretDirection = decipherMetadata(metadata);
         int xReal = x;
         int zReal = z;
-        switch (turretDirection) {
-            case NORTH:
-                z--; // Assuming North is negative Z in your world
-                break;
-            case SOUTH:
-                z++; // And South is positive Z
-                break;
-            case EAST:
-                x++; // East is positive X
-                break;
-            case WEST:
-                x--; // West is negative X
-                break;
-            default:
-                throw new IllegalStateException(
-                        "The metadata led to an unknown direction. This shouldn't happen, see?");
-        }
+        x += turretDirection.offsetX;
+        z += turretDirection.offsetZ;
 
         if (!(world.getTileEntity(x, y, z) instanceof TurretBaseTierOneTileEntity)) {
             world.setBlockToAir(x, y, z);
