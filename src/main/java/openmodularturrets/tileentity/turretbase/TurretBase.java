@@ -547,16 +547,13 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
             this.storage.setCapacity(getMaxEnergyStorageWithExtenders());
 
             // Thaumcraft
-            if (ModCompatibility.ThaumcraftLoaded && TurretHeadUtil.hasPotentiaUpgradeAddon(this)
-                    && amountOfPotentia > 0.05F
-                    && (storage.getMaxEnergyStored() - storage.getEnergyStored() != 0)) {
-                if (VisNetHandler.drainVis(worldObj, xCoord, yCoord, zCoord, Aspect.ORDER, 5) == 5) {
-                    this.amountOfPotentia = this.amountOfPotentia - 0.05F;
-                    this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() * 5));
-                } else {
-                    this.amountOfPotentia = this.amountOfPotentia - 0.05F;
-                    this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() / 2f));
+            if (ModCompatibility.ThaumcraftLoaded && TurretHeadUtil.hasPotentiaUpgradeAddon(this)) {
+                if (amountOfPotentia > 0.05F && storage.getEnergyStored() < storage.getMaxEnergyStored()) {
+                    float multiplier = VisNetHandler.drainVis(worldObj, xCoord, yCoord, zCoord, Aspect.ORDER, 5) == 5 ? 5f : 0.5f;
+                    this.amountOfPotentia -= 0.05f;
+                    this.storage.modifyEnergyStored(Math.round(ConfigHandler.getPotentiaToRFRatio() * multiplier));
                 }
+            }
             }
 
             if (ModCompatibility.IC2Loaded && ConfigHandler.EUSupport
