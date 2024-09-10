@@ -22,10 +22,10 @@ public class BlockTurretBaseTierTwo extends BlockAbstractTurretBase {
     }
 
     @Override
-    public void registerBlockIcons(IIconRegister p_149651_1_) {
-        super.registerBlockIcons(p_149651_1_);
+    public void registerBlockIcons(IIconRegister reg) {
+        super.registerBlockIcons(reg);
 
-        blockIcon = p_149651_1_.registerIcon(ModInfo.ID.toLowerCase() + ":turretBaseTierTwo");
+        blockIcon = reg.registerIcon(ModInfo.ID.toLowerCase() + ":turretBaseTierTwo");
     }
 
     @Override

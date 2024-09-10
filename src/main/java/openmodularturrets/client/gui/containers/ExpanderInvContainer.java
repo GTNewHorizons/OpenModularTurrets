@@ -41,15 +41,15 @@ public class ExpanderInvContainer extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_) {
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.inventorySlots.get(p_82846_2_);
+        Slot slot = (Slot) this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (p_82846_2_ < 9) {
+            if (index < 9) {
                 if (!this.mergeItemStack(itemstack1, 9, 45, true)) {
                     return null;
                 }
@@ -67,7 +67,7 @@ public class ExpanderInvContainer extends Container {
                 return null;
             }
 
-            slot.onPickupFromSlot(p_82846_1_, itemstack1);
+            slot.onPickupFromSlot(player, itemstack1);
         }
 
         return itemstack;

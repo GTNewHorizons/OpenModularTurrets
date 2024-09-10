@@ -579,7 +579,7 @@ public class TurretHeadUtil {
         double dX = (target.posX) - (xCoord);
         double dZ = (target.posZ) - (zCoord);
         float yaw = (float) Math.atan2(dZ, dX);
-        yaw = yaw - 1.570796F + 3.1F;
+        yaw = yaw - ((float) Math.PI / 2F) + 3.1F;
         return yaw;
     }
 

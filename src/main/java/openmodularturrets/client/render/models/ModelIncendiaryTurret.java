@@ -44,13 +44,13 @@ public class ModelIncendiaryTurret extends ModelBase {
         BoxLeft.setRotationPoint(0F, 16F, 0F);
         BoxLeft.setTextureSize(64, 64);
         BoxLeft.mirror = true;
-        setRotation(BoxLeft, 0F, 0F, 1.570796F);
+        setRotation(BoxLeft, 0F, 0F, ((float) Math.PI / 2F));
         BoxRight = new ModelRenderer(this, 0, 15);
         BoxRight.addBox(-4F, -5F, -4F, 8, 1, 8);
         BoxRight.setRotationPoint(0F, 16F, 0F);
         BoxRight.setTextureSize(64, 64);
         BoxRight.mirror = true;
-        setRotation(BoxRight, 0F, 0F, 1.570796F);
+        setRotation(BoxRight, 0F, 0F, ((float) Math.PI / 2F));
         CrossBar = new ModelRenderer(this, 0, 0);
         CrossBar.addBox(-4F, -2F, 0F, 8, 1, 1);
         CrossBar.setRotationPoint(0F, 16F, 0F);
