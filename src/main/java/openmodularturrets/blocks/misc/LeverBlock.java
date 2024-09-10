@@ -98,7 +98,8 @@ public class LeverBlock extends BlockAbstract implements ITileEntityProvider {
         }
 
         if (!(world.getTileEntity(x, y, z) instanceof TurretBaseTierOneTileEntity)) {
-            this.breakBlock(world, xReal, y, zReal, this, world.getBlockMetadata(xReal, y, zReal));
+            world.setBlockToAir(x, y, z);
+            return null;
         }
 
         return (TurretBaseTierOneTileEntity) world.getTileEntity(x, y, z);
