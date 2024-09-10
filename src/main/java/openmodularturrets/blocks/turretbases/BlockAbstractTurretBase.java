@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
@@ -130,7 +131,7 @@ public abstract class BlockAbstractTurretBase extends BlockAbstractContainer {
 
     @Override
     public IIcon getIcon(IBlockAccess worldIn, int x, int y, int z, int side) {
-        TileEntity tile = (TurretBase) worldIn.getTileEntity(x, y, z);
+        TileEntity tile = worldIn.getTileEntity(x, y, z);
         if (tile instanceof TurretBase base && base.camoStack != null) {
             Block camoBlock = Block.getBlockFromItem(base.camoStack.getItem());
             if (camoBlock != null && camoBlock.renderAsNormalBlock())
