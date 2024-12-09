@@ -16,8 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cofh.api.energy.EnergyStorage;
@@ -27,9 +25,7 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
+import gregtech.api.interfaces.tileentity.IEnergyConnected;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -52,10 +48,10 @@ import thaumcraft.api.visnet.VisNetHandler;
         @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"),
         @Optional.Interface(iface = "thaumcraft.api.aspects.IAspectContainer", modid = "Thaumcraft"),
         @Optional.Interface(iface = "thaumcraft.api.aspects.IEssentiaTransport", modid = "Thaumcraft"),
-        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2") })
+        @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "gregtech") })
 
 public abstract class TurretBase extends TileEntityContainer implements IEnergyHandler, SimpleComponent,
-        ISidedInventory, IEssentiaTransport, IAspectContainer, IPeripheral, IEnergySink {
+        ISidedInventory, IEssentiaTransport, IAspectContainer, IPeripheral, IEnergyConnected {
 
     public int trustedPlayerIndex = 0;
     public ItemStack camoStack;
@@ -140,44 +136,6 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         }
     }
 
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double injectEnergy(ForgeDirection forgeDirection, double v, double v1) {
-        storageEU += v;
-        return 0.0D;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public int getSinkTier() {
-        return Integer.MAX_VALUE;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double getDemandedEnergy() {
-        return Math.max(4000D - storageEU, 0.0D);
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public boolean acceptsEnergyFrom(TileEntity tileEntity, ForgeDirection forgeDirection) {
-        return true;
-    }
-
-    @Optional.Method(modid = "IC2")
-    protected void addToIc2EnergyNetwork() {
-        if (!worldObj.isRemote) {
-            EnergyTileLoadEvent event = new EnergyTileLoadEvent(this);
-            MinecraftForge.EVENT_BUS.post(event);
-        }
-    }
-
-    @Optional.Method(modid = "IC2")
-    protected void removeFromIc2EnergyNetwork() {
-        MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-    }
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -186,11 +144,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
 
     @Override
     public void onChunkUnload() {
-        if (wasAddedToEnergyNet && ModCompatibility.IC2Loaded) {
-            removeFromIc2EnergyNetwork();
 
-            wasAddedToEnergyNet = false;
-        }
     }
 
     private int getMaxEnergyStorageWithExtenders() {
@@ -530,13 +484,43 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         return 0;
     }
 
+    @Optional.Method(modid = "gregtech")
+    @Override
+    public long injectEnergyUnits(ForgeDirection side, long aVoltage, long aAmperage) {
+        if (storageEU < 40000 * getBaseTier()) {
+            storageEU += aVoltage * aAmperage;
+            markDirty();
+            return aAmperage;
+        }
+        return 0;
+    }
+
+    @Optional.Method(modid = "gregtech")
+    @Override
+    public boolean inputEnergyFrom(ForgeDirection side) {
+        return storageEU < 40000 * getBaseTier();
+    }
+
+    @Optional.Method(modid = "gregtech")
+    @Override
+    public boolean outputsEnergyTo(ForgeDirection side) {
+        return false;
+    }
+
+    @Optional.Method(modid = "gregtech")
+    @Override
+    public byte getColorization() {
+        return -1;
+    }
+
+    @Optional.Method(modid = "gregtech")
+    @Override
+    public byte setColorization(byte aColor) {
+        return -1;
+    }
+
     @Override
     public void updateEntity() {
-        if (ModCompatibility.IC2Loaded && ConfigHandler.EUSupport && !wasAddedToEnergyNet && !worldObj.isRemote) {
-            addToIc2EnergyNetwork();
-            wasAddedToEnergyNet = true;
-        }
-
         ticks++;
         if (!worldObj.isRemote && ticks % 5 == 0) {
 
@@ -568,9 +552,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
                 }
             }
 
-            if (ModCompatibility.IC2Loaded && ConfigHandler.EUSupport
-                    && storage.getMaxEnergyStored() != storage.getEnergyStored()
-                    && storageEU > 0) {
+            if (ConfigHandler.EUSupport && storage.getMaxEnergyStored() != storage.getEnergyStored() && storageEU > 0) {
                 int energyToAdd = MathUtil.truncateDoubleToInt(
                         Math.min(
                                 storage.getMaxEnergyStored() - storage.getEnergyStored(),
@@ -581,7 +563,6 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
             }
 
             if (ticks == 20) {
-
                 // General
                 ticks = 0;
                 updateRedstoneReactor(this);
