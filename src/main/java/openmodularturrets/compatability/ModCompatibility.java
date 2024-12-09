@@ -24,6 +24,7 @@ public class ModCompatibility {
     public static boolean OpenComputersLoaded = false;
     public static boolean ComputercraftLoaded = false;
     public static boolean IC2Loaded = false;
+    public static boolean GTLoaded = false;
     private static Logger logger;
 
     public static void checkForMods() {
@@ -55,6 +56,13 @@ public class ModCompatibility {
             logger.info("Enabling LUA integration. (Found OpenComputers/ComputerCraft)");
         }
         IC2Loaded = Loader.isModLoaded("IC2");
+        if (IC2Loaded) {
+            logger.info("I'm not a doctor, but I think you have a case of IC2. (Found IC2)");
+        }
+        GTLoaded = Loader.isModLoaded("gregtech");
+        if (GTLoaded) {
+            logger.info("Oh you like doing things the hard way? (Found Gregtech)");
+        }
     }
 
     private static void addVersionCheckerInfo() {
