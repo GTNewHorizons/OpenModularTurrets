@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import openmodularturrets.ModularTurrets;
 import openmodularturrets.tileentity.turretbase.TurretBase;
 
-abstract class BlockAbstractTurretHead extends Block implements ITileEntityProvider {
+public abstract class BlockAbstractTurretHead extends Block implements ITileEntityProvider {
 
     private static final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.2F, 0.2F, 0.2F, 0.8F, 0.8F, 0.8F);
 
