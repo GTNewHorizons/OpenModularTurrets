@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
+import openmodularturrets.blocks.turretheads.BlockAbstractTurretHead;
 import openmodularturrets.entity.projectiles.damagesources.NormalDamageSource;
 import openmodularturrets.handler.ConfigHandler;
 import openmodularturrets.tileentity.turretbase.TurretBase;
@@ -41,14 +42,12 @@ public class LaserProjectile extends TurretProjectile {
 
     @Override
     protected void onImpact(MovingObjectPosition movingobjectposition) {
-        if (this.ticksExisted <= 1) {
-            return;
-        }
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
             Block hitBlock = worldObj
                     .getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-            if (hitBlock != null && !hitBlock.getMaterial().isSolid()) {
-                // Go through non solid block
+            if (hitBlock != null
+                    && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
+                // Go through non-solid block or turrets
                 return;
             }
         }
