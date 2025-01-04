@@ -385,7 +385,7 @@ public abstract class TurretHead extends TileEntity {
                 double speedY = target instanceof EntityPlayerMP ? targetSpeedY : target.posY - target.prevPosY;
                 double speedZ = target instanceof EntityPlayerMP ? targetSpeedZ : target.posZ - target.prevPosZ;
                 double d0 = target.posX - projectile.posX;
-                double d1 = target.posY + (double) target.getEyeHeight() - projectile.posY;
+                double d1 = target.posY + (double) target.height / 2.0D - projectile.posY;
                 double d2 = target.posZ - projectile.posZ;
                 double dist = MathHelper.sqrt_double(d0 * d0 + d1 * d1 + d2 * d2);
                 float f1 = (float) dist * (0.2F * (getDistanceToEntity(target) * 0.04F));
