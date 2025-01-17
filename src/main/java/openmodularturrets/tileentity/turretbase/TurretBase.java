@@ -97,9 +97,12 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         this.active = true;
         this.ticks = 0;
     }
-
+    public void onKill(Entity entity) {
+         this.killCount++;
+    }
+        
     private static void updateRedstoneReactor(TurretBase base) {
-        if (!TurretHeadUtil.hasRedstoneReactor(base)) {
+        if (!TurretHeadUtil.asRedstoneReactor(base)) {
             return;
         }
 
