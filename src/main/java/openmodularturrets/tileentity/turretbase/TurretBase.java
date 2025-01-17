@@ -82,6 +82,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
     private double storageEU;
     private boolean wasAddedToEnergyNet = false;
     public boolean waitForTrustedPlayer = false;
+    private int killCount = 0;
 
     public TurretBase(int MaxEnergyStorage, int MaxIO) {
         super();
