@@ -131,6 +131,9 @@ public class RocketProjectile extends TurretProjectile {
                     mob.attackEntityFrom(new NormalDamageSource("rocket"), damage);
                     mob.hurtResistantTime = 0;
                 }
+                if (movingobjectposition.entityHit.isDead) {
+                    turretBase.onKill(movingobjectposition.entityHit);
+                }
             }
         }
         this.setDead();

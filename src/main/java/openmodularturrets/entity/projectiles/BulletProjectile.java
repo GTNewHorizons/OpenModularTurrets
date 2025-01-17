@@ -74,6 +74,9 @@ public class BulletProjectile extends TurretProjectile {
                 movingobjectposition.entityHit.hurtResistantTime = 0;
             }
         }
+        if (movingobjectposition.entityHit.isDead) {
+            turretBase.onKill(movingobjectposition.entityHit);
+        }
 
         if (movingobjectposition.entityHit == null && !worldObj.isRemote) {
             Random random = new Random();

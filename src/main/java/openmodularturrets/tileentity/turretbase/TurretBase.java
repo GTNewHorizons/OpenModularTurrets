@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -627,6 +628,10 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
 
     public boolean isMultiTargeting() {
         return multiTargeting;
+    }
+
+    public int getKillCount() {
+        return killCount;
     }
 
     public void setMultiTargeting(boolean multiTargeting) {

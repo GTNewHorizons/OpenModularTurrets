@@ -65,6 +65,9 @@ public class GrenadeProjectile extends TurretProjectile {
                         mob.attackEntityFrom(new ArmorBypassDamageSource("grenade"), damage * 0.1F);
                         mob.hurtResistantTime = 0;
                     }
+                    if (mob.isDead) {
+                        turretBase.onKill(mob);
+                    }
 
                 }
             }

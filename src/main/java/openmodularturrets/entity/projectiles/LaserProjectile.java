@@ -83,6 +83,9 @@ public class LaserProjectile extends TurretProjectile {
                     movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("laser"), damage);
                     movingobjectposition.entityHit.hurtResistantTime = 0;
                 }
+                if (movingobjectposition.entityHit.isDead) {
+                    turretBase.onKill(movingobjectposition.entityHit);
+                }
             }
         }
         this.setDead();

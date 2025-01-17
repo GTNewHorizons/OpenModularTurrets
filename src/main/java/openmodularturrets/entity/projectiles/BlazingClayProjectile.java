@@ -75,8 +75,9 @@ public class BlazingClayProjectile extends TurretProjectile {
                 }
             }
 
-            for (Entity mob : targets) {
 
+            for (Entity mob : targets) {
+                boolean wasAlive = !mob.isDead;
                 if (mob instanceof EntityPlayer) {
                     if (canDamagePlayer((EntityPlayer) mob)) {
                         mob.attackEntityFrom(new NormalDamageSource("bullet"), damage);
@@ -88,9 +89,14 @@ public class BlazingClayProjectile extends TurretProjectile {
                     mob.hurtResistantTime = 0;
                     mob.setFire(5);
                 }
+
+                if (wasAlive && mob.isDead) {
+                    turretBase.onKill(mob);  // Ensure turretBase is accessible
+                }
             }
         }
         this.setDead();
+
     }
 
     @Override

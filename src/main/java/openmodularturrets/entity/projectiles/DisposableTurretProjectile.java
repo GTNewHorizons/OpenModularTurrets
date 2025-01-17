@@ -57,6 +57,8 @@ public class DisposableTurretProjectile extends TurretProjectile {
             }
         }
 
+
+
         if (movingobjectposition.entityHit != null && !worldObj.isRemote) {
             if (movingobjectposition.typeOfHit.equals(0)) {
                 if (worldObj.isAirBlock(
@@ -85,7 +87,11 @@ public class DisposableTurretProjectile extends TurretProjectile {
                 movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("disposable"), damage);
                 movingobjectposition.entityHit.hurtResistantTime = 0;
             }
+            if (movingobjectposition.entityHit.isDead) {
+                turretBase.onKill(movingobjectposition.entityHit);
+            }
         }
+
 
         if (itemBound != null) {
             itemBound.setDead();
