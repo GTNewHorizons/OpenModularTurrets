@@ -82,10 +82,8 @@ public class RocketProjectile extends TurretProjectile {
         }
 
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            Block hitBlock = worldObj.getBlock(
-                    movingobjectposition.blockX,
-                    movingobjectposition.blockY,
-                    movingobjectposition.blockZ);
+            Block hitBlock = worldObj
+                    .getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
             if (hitBlock != null && (!hitBlock.getMaterial().isSolid() || worldObj.isAirBlock(
                     movingobjectposition.blockX,
                     movingobjectposition.blockY,

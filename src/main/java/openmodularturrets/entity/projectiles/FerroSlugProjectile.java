@@ -35,11 +35,10 @@ public class FerroSlugProjectile extends TurretProjectile {
     @Override
     protected void onImpact(MovingObjectPosition movingobjectposition) {
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            Block hitBlock = worldObj.getBlock(
-                    movingobjectposition.blockX,
-                    movingobjectposition.blockY,
-                    movingobjectposition.blockZ);
-            if (hitBlock != null && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
+            Block hitBlock = worldObj
+                    .getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
+            if (hitBlock != null
+                    && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
                 // Go through non-solid block or turrets
                 return;
             }
