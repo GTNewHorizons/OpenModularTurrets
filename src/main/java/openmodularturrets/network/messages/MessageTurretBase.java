@@ -22,7 +22,7 @@ import openmodularturrets.tileentity.turretbase.TurretBase;
  */
 public class MessageTurretBase implements IMessage {
 
-    private int x, y, z, rfStorage, yAxisDetect;
+    private int x, y, z, rfStorage, yAxisDetect, killCount;
     private boolean attacksMobs, attacksNeutrals, attacksPlayers, multiTargeting, waitForTrustedPlayer;
     private String owner, ownerName;
     private List<TrustedPlayer> trustedPlayers = new ArrayList<>();
@@ -45,7 +45,9 @@ public class MessageTurretBase implements IMessage {
                 ((TurretBase) tileEntity).setAttacksPlayers(message.attacksPlayers);
                 ((TurretBase) tileEntity).setMultiTargeting(message.multiTargeting);
                 ((TurretBase) tileEntity).setTrustedPlayers(message.trustedPlayers);
+                ((TurretBase) tileEntity).setKillCount(message.killCount);
                 ((TurretBase) tileEntity).waitForTrustedPlayer = message.waitForTrustedPlayer;
+
                 ((TurretBase) tileEntity).camoStack = message.camoStack;
             }
             return null;
@@ -67,7 +69,9 @@ public class MessageTurretBase implements IMessage {
             this.attacksPlayers = TurretBase.isAttacksPlayers();
             this.multiTargeting = TurretBase.isMultiTargeting();
             this.trustedPlayers = TurretBase.getTrustedPlayers();
+            this.killCount = TurretBase.getKillCount();
             this.waitForTrustedPlayer = TurretBase.waitForTrustedPlayer;
+
             this.camoStack = TurretBase.camoStack;
         }
     }
@@ -88,6 +92,7 @@ public class MessageTurretBase implements IMessage {
         this.attacksPlayers = buf.readBoolean();
         this.multiTargeting = buf.readBoolean();
         this.waitForTrustedPlayer = buf.readBoolean();
+        this.killCount = buf.readInt();
         this.camoStack = ByteBufUtils.readItemStack(buf);
         int lengthOfTPList = buf.readInt();
         if (lengthOfTPList > 0) {
@@ -121,6 +126,7 @@ public class MessageTurretBase implements IMessage {
         buf.writeBoolean(attacksPlayers);
         buf.writeBoolean(multiTargeting);
         buf.writeBoolean(waitForTrustedPlayer);
+        buf.writeInt(killCount);
         ByteBufUtils.writeItemStack(buf, camoStack);
         buf.writeInt(trustedPlayers.size());
         if (trustedPlayers.size() > 0) {

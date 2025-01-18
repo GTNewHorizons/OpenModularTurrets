@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -46,7 +45,7 @@ public class FerroSlugProjectile extends TurretProjectile {
         }
 
         if (movingobjectposition.entityHit != null && !worldObj.isRemote) {
-            if (movingobjectposition.typeOfHit.equals(0)) {
+            if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 if (worldObj.isAirBlock(
                         movingobjectposition.blockX,
                         movingobjectposition.blockY,
@@ -56,12 +55,11 @@ public class FerroSlugProjectile extends TurretProjectile {
             }
 
             int damage = ConfigHandler.getRailgun_turret().getDamage();
+            boolean wasAlive = !movingobjectposition.entityHit.isDead;
 
-            if (isAmped) {
-                if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-                    EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
-                    damage += ((int) elb.getHealth() * (0.25 * amp_level));
-                }
+            if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                damage += ((int) elb.getHealth() * (0.25 * amp_level));
             }
 
             Random random = new Random();
@@ -73,14 +71,24 @@ public class FerroSlugProjectile extends TurretProjectile {
                     ConfigHandler.getTurretSoundVolume(),
                     random.nextFloat() + 0.5F);
 
-            if (movingobjectposition.entityHit instanceof EntityPlayer) {
-                if (canDamagePlayer((EntityPlayer) movingobjectposition.entityHit)) {
-                    movingobjectposition.entityHit.attackEntityFrom(new ArmorBypassDamageSource("ferroslug"), damage);
-                    movingobjectposition.entityHit.hurtResistantTime = 0;
+            if (movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                float healthBefore = elb.getHealth();
+
+                elb.attackEntityFrom(new ArmorBypassDamageSource("ferroslug"), damage);
+                elb.hurtResistantTime = 0;
+
+                float healthAfter = elb.getHealth();
+                if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
+                    turretBase.onKill(elb);
                 }
             } else {
                 movingobjectposition.entityHit.attackEntityFrom(new ArmorBypassDamageSource("ferroslug"), damage);
                 movingobjectposition.entityHit.hurtResistantTime = 0;
+
+                if (wasAlive && movingobjectposition.entityHit.isDead) {
+                    turretBase.onKill(movingobjectposition.entityHit);
+                }
             }
         }
 

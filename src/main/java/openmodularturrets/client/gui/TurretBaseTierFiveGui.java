@@ -63,6 +63,9 @@ public class TurretBaseTierFiveGui extends TurretBaseAbstractGui {
         targetInfo.add("\u00A77Attack Neutrals: \u00A7b" + base.isAttacksNeutrals());
         targetInfo.add("\u00A77Attack Players: \u00A7b" + base.isAttacksPlayers());
 
+        targetInfo.add("");
+        targetInfo.add("\u00A77Kill Count: \u00A7b" + base.getKillCount());
+
         this.drawHoveringText(targetInfo, -128, 17, fontRenderer);
     }
 

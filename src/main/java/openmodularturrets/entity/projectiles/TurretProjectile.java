@@ -17,7 +17,7 @@ public abstract class TurretProjectile extends EntityThrowable {
     boolean isAmped;
     int amp_level;
     ItemStack ammo;
-    private TurretBase turretBase;
+    protected TurretBase turretBase;
 
     TurretProjectile(World p_i1776_1_) {
         super(p_i1776_1_);

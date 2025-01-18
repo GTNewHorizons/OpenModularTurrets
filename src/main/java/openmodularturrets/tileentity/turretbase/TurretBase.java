@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -82,6 +83,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
     private double storageEU;
     private boolean wasAddedToEnergyNet = false;
     public boolean waitForTrustedPlayer = false;
+    private int killCount = 0;
 
     public TurretBase(int MaxEnergyStorage, int MaxIO) {
         super();
@@ -95,6 +97,10 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         this.inverted = true;
         this.active = true;
         this.ticks = 0;
+    }
+
+    public void onKill(Entity entity) {
+        this.killCount++;
     }
 
     private static void updateRedstoneReactor(TurretBase base) {
@@ -313,6 +319,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         par1.setBoolean("shouldConcealTurrets", shouldConcealTurrets);
         par1.setBoolean("multiTargeting", multiTargeting);
         par1.setDouble("storageEU", storageEU);
+        par1.setInteger("killCount", killCount);
 
         NBTTagList itemList = new NBTTagList();
 
@@ -348,6 +355,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         this.attacksPlayers = par1.getBoolean("attacksPlayers");
         this.shouldConcealTurrets = par1.getBoolean("shouldConcealTurrets");
         this.multiTargeting = par1.getBoolean("multiTargeting");
+        this.killCount = par1.getInteger("killCount");
 
         if (getPlayerUIDUnstable(par1.getString("owner")) != null) {
             this.owner = getPlayerUIDUnstable(par1.getString("owner")).toString();
@@ -623,6 +631,14 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
 
     public boolean isMultiTargeting() {
         return multiTargeting;
+    }
+
+    public int getKillCount() {
+        return killCount;
+    }
+
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
     }
 
     public void setMultiTargeting(boolean multiTargeting) {
