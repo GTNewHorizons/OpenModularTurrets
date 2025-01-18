@@ -104,6 +104,9 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
     }
 
     private static void updateRedstoneReactor(TurretBase base) {
+        if (!TurretHeadUtil.hasRedstoneReactor(base)) {
+            return;
+        }
 
         if (ConfigHandler.getRedstoneReactorAddonGen()
                 < (base.getMaxEnergyStored(ForgeDirection.UNKNOWN) - base.getEnergyStored(ForgeDirection.UNKNOWN))) {

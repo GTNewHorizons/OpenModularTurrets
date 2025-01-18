@@ -54,6 +54,8 @@ public class BulletProjectile extends TurretProjectile {
         if (movingobjectposition.entityHit != null && !worldObj.isRemote) {
             // Determine final damage
             int damage = ConfigHandler.getGunTurretSettings().getDamage();
+            boolean wasAlive = !movingobjectposition.entityHit.isDead;
+
             if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
                 EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
                 damage += ((int) elb.getHealth() * (0.1 * amp_level));
@@ -79,7 +81,7 @@ public class BulletProjectile extends TurretProjectile {
 
                 // Check if the entity was killed
                 float healthAfter = elb.getHealth();
-                if (healthBefore > 0 && healthAfter <= 0) {
+                if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
                     // If final blow, increment kill count or handle kill logic
                     turretBase.onKill(elb);
                 }

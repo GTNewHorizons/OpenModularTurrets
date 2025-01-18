@@ -43,10 +43,11 @@ public class LaserProjectile extends TurretProjectile {
     @Override
     protected void onImpact(MovingObjectPosition movingobjectposition) {
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            Block hitBlock = worldObj
-                    .getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-            if (hitBlock != null
-                    && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
+            Block hitBlock = worldObj.getBlock(
+                    movingobjectposition.blockX,
+                    movingobjectposition.blockY,
+                    movingobjectposition.blockZ);
+            if (hitBlock != null && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
                 // Go through non-solid block or turrets
                 return;
             }
@@ -63,6 +64,7 @@ public class LaserProjectile extends TurretProjectile {
                     random.nextFloat() + 0.5F);
 
             int damage = ConfigHandler.getLaserTurretSettings().getDamage();
+            boolean wasAlive = !movingobjectposition.entityHit.isDead;
 
             if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
                 EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
@@ -78,7 +80,7 @@ public class LaserProjectile extends TurretProjectile {
                 elb.hurtResistantTime = 0;
 
                 float healthAfter = elb.getHealth();
-                if (healthBefore > 0 && healthAfter <= 0) {
+                if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
                     turretBase.onKill(elb);
                 }
             } else {
@@ -86,7 +88,7 @@ public class LaserProjectile extends TurretProjectile {
                 movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("laser"), damage);
                 movingobjectposition.entityHit.hurtResistantTime = 0;
 
-                if (movingobjectposition.entityHit.isDead) {
+                if (wasAlive && movingobjectposition.entityHit.isDead) {
                     turretBase.onKill(movingobjectposition.entityHit);
                 }
             }

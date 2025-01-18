@@ -35,10 +35,11 @@ public class FerroSlugProjectile extends TurretProjectile {
     @Override
     protected void onImpact(MovingObjectPosition movingobjectposition) {
         if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-            Block hitBlock = worldObj
-                    .getBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
-            if (hitBlock != null
-                    && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
+            Block hitBlock = worldObj.getBlock(
+                    movingobjectposition.blockX,
+                    movingobjectposition.blockY,
+                    movingobjectposition.blockZ);
+            if (hitBlock != null && (!hitBlock.getMaterial().isSolid() || hitBlock instanceof BlockAbstractTurretHead)) {
                 // Go through non-solid block or turrets
                 return;
             }
@@ -55,6 +56,7 @@ public class FerroSlugProjectile extends TurretProjectile {
             }
 
             int damage = ConfigHandler.getRailgun_turret().getDamage();
+            boolean wasAlive = !movingobjectposition.entityHit.isDead;
 
             if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
                 EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
@@ -78,14 +80,14 @@ public class FerroSlugProjectile extends TurretProjectile {
                 elb.hurtResistantTime = 0;
 
                 float healthAfter = elb.getHealth();
-                if (healthBefore > 0 && healthAfter <= 0) {
+                if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
                     turretBase.onKill(elb);
                 }
             } else {
                 movingobjectposition.entityHit.attackEntityFrom(new ArmorBypassDamageSource("ferroslug"), damage);
                 movingobjectposition.entityHit.hurtResistantTime = 0;
 
-                if (movingobjectposition.entityHit.isDead) {
+                if (wasAlive && movingobjectposition.entityHit.isDead) {
                     turretBase.onKill(movingobjectposition.entityHit);
                 }
             }

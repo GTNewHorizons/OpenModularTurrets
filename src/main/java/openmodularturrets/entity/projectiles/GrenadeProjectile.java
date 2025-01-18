@@ -44,6 +44,7 @@ public class GrenadeProjectile extends TurretProjectile {
 
                 for (Entity mob : targets) {
                     int damage = ConfigHandler.getGrenadeTurretSettings().getDamage();
+                    boolean wasAlive = !mob.isDead;
 
                     if (isAmped && mob instanceof EntityLivingBase) {
                         EntityLivingBase elb = (EntityLivingBase) mob;
@@ -59,7 +60,7 @@ public class GrenadeProjectile extends TurretProjectile {
                         mob.hurtResistantTime = 0;
 
                         float healthAfter = elb.getHealth();
-                        if (healthBefore > 0 && healthAfter <= 0) {
+                        if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
                             turretBase.onKill(elb);
                         }
                     } else {
@@ -67,7 +68,7 @@ public class GrenadeProjectile extends TurretProjectile {
                         mob.attackEntityFrom(new ArmorBypassDamageSource("grenade"), damage * 0.1F);
                         mob.hurtResistantTime = 0;
 
-                        if (mob.isDead) {
+                        if (wasAlive && mob.isDead) {
                             turretBase.onKill(mob);
                         }
                     }
