@@ -342,8 +342,6 @@ public class ConfigureGui extends GuiContainer {
 
         textFieldAddTrustedPlayer.drawTextBox();
 
-        fontRenderer.drawString("Kills: " + base.getKillCount(), 10, 160, 0);
-
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
 

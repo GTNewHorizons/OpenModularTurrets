@@ -98,14 +98,12 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         this.active = true;
         this.ticks = 0;
     }
+
     public void onKill(Entity entity) {
-         this.killCount++;
+        this.killCount++;
     }
-        
+
     private static void updateRedstoneReactor(TurretBase base) {
-        if (!TurretHeadUtil.asRedstoneReactor(base)) {
-            return;
-        }
 
         if (ConfigHandler.getRedstoneReactorAddonGen()
                 < (base.getMaxEnergyStored(ForgeDirection.UNKNOWN) - base.getEnergyStored(ForgeDirection.UNKNOWN))) {
@@ -318,6 +316,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         par1.setBoolean("shouldConcealTurrets", shouldConcealTurrets);
         par1.setBoolean("multiTargeting", multiTargeting);
         par1.setDouble("storageEU", storageEU);
+        par1.setInteger("killCount", killCount);
 
         NBTTagList itemList = new NBTTagList();
 
@@ -353,6 +352,7 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
         this.attacksPlayers = par1.getBoolean("attacksPlayers");
         this.shouldConcealTurrets = par1.getBoolean("shouldConcealTurrets");
         this.multiTargeting = par1.getBoolean("multiTargeting");
+        this.killCount = par1.getInteger("killCount");
 
         if (getPlayerUIDUnstable(par1.getString("owner")) != null) {
             this.owner = getPlayerUIDUnstable(par1.getString("owner")).toString();
@@ -632,6 +632,10 @@ public abstract class TurretBase extends TileEntityContainer implements IEnergyH
 
     public int getKillCount() {
         return killCount;
+    }
+
+    public void setKillCount(int killCount) {
+        this.killCount = killCount;
     }
 
     public void setMultiTargeting(boolean multiTargeting) {

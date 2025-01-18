@@ -62,27 +62,30 @@ public class LaserProjectile extends TurretProjectile {
                     ConfigHandler.getTurretSoundVolume(),
                     random.nextFloat() + 0.5F);
 
-            if (movingobjectposition.entityHit != null && !worldObj.isRemote) {
-                int damage = ConfigHandler.getLaserTurretSettings().getDamage();
+            int damage = ConfigHandler.getLaserTurretSettings().getDamage();
 
-                if (isAmped) {
-                    if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-                        EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
-                        damage += ((int) elb.getHealth() * (0.1 * amp_level));
-                    }
-                }
+            if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                damage += ((int) elb.getHealth() * (0.1 * amp_level));
+            }
 
-                if (movingobjectposition.entityHit instanceof EntityPlayer) {
-                    if (canDamagePlayer((EntityPlayer) movingobjectposition.entityHit)) {
-                        movingobjectposition.entityHit.setFire(2);
-                        movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("laser"), damage);
-                        movingobjectposition.entityHit.hurtResistantTime = 0;
-                    }
-                } else {
-                    movingobjectposition.entityHit.setFire(2);
-                    movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("laser"), damage);
-                    movingobjectposition.entityHit.hurtResistantTime = 0;
+            if (movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                float healthBefore = elb.getHealth();
+
+                elb.setFire(2);
+                elb.attackEntityFrom(new NormalDamageSource("laser"), damage);
+                elb.hurtResistantTime = 0;
+
+                float healthAfter = elb.getHealth();
+                if (healthBefore > 0 && healthAfter <= 0) {
+                    turretBase.onKill(elb);
                 }
+            } else {
+                movingobjectposition.entityHit.setFire(2);
+                movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("laser"), damage);
+                movingobjectposition.entityHit.hurtResistantTime = 0;
+
                 if (movingobjectposition.entityHit.isDead) {
                     turretBase.onKill(movingobjectposition.entityHit);
                 }

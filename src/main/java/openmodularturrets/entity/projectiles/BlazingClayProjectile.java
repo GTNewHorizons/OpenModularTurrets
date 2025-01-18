@@ -68,35 +68,48 @@ public class BlazingClayProjectile extends TurretProjectile {
 
             int damage = ConfigHandler.getIncendiary_turret().getDamage();
 
-            if (isAmped) {
-                if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-                    EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
-                    damage += ((int) elb.getHealth() * (0.05 * amp_level));
-                }
+            if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                damage += ((int) elb.getHealth() * (0.05 * amp_level));
             }
-
 
             for (Entity mob : targets) {
                 boolean wasAlive = !mob.isDead;
-                if (mob instanceof EntityPlayer) {
-                    if (canDamagePlayer((EntityPlayer) mob)) {
-                        mob.attackEntityFrom(new NormalDamageSource("bullet"), damage);
-                        mob.hurtResistantTime = 0;
-                        mob.setFire(5);
+                float healthBefore = 0;
+
+                if (mob instanceof EntityLivingBase) {
+                    EntityLivingBase elb = (EntityLivingBase) mob;
+                    healthBefore = elb.getHealth();
+
+                    if (mob instanceof EntityPlayer) {
+                        if (canDamagePlayer((EntityPlayer) mob)) {
+                            elb.attackEntityFrom(new NormalDamageSource("bullet"), damage);
+                            elb.hurtResistantTime = 0;
+                            elb.setFire(5);
+                        }
+                    } else {
+                        elb.attackEntityFrom(new NormalDamageSource("bullet"), damage);
+                        elb.hurtResistantTime = 0;
+                        elb.setFire(5);
+                    }
+
+                    float healthAfter = elb.getHealth();
+                    if (wasAlive && healthBefore > 0 && healthAfter <= 0) {
+                        turretBase.onKill(mob);
                     }
                 } else {
+                    // Handle non-living base entities
                     mob.attackEntityFrom(new NormalDamageSource("bullet"), damage);
                     mob.hurtResistantTime = 0;
                     mob.setFire(5);
-                }
 
-                if (wasAlive && mob.isDead) {
-                    turretBase.onKill(mob);  // Ensure turretBase is accessible
+                    if (wasAlive && mob.isDead) {
+                        turretBase.onKill(mob);
+                    }
                 }
             }
         }
         this.setDead();
-
     }
 
     @Override

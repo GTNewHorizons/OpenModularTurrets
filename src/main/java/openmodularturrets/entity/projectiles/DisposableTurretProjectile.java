@@ -3,7 +3,6 @@ package openmodularturrets.entity.projectiles;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -57,10 +56,8 @@ public class DisposableTurretProjectile extends TurretProjectile {
             }
         }
 
-
-
         if (movingobjectposition.entityHit != null && !worldObj.isRemote) {
-            if (movingobjectposition.typeOfHit.equals(0)) {
+            if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 if (worldObj.isAirBlock(
                         movingobjectposition.blockX,
                         movingobjectposition.blockY,
@@ -71,27 +68,31 @@ public class DisposableTurretProjectile extends TurretProjectile {
 
             int damage = ConfigHandler.getDisposableTurretSettings().getDamage();
 
-            if (isAmped) {
-                if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-                    EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
-                    damage += ((int) elb.getHealth() * (0.05 * amp_level));
-                }
+            if (isAmped && movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                damage += ((int) elb.getHealth() * (0.05 * amp_level));
             }
 
-            if (movingobjectposition.entityHit instanceof EntityPlayer) {
-                if (canDamagePlayer((EntityPlayer) movingobjectposition.entityHit)) {
-                    movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("disposable"), damage);
-                    movingobjectposition.entityHit.hurtResistantTime = 0;
+            if (movingobjectposition.entityHit instanceof EntityLivingBase) {
+                EntityLivingBase elb = (EntityLivingBase) movingobjectposition.entityHit;
+                float healthBefore = elb.getHealth();
+
+                elb.attackEntityFrom(new NormalDamageSource("disposable"), damage);
+                elb.hurtResistantTime = 0;
+
+                float healthAfter = elb.getHealth();
+                if (healthBefore > 0 && healthAfter <= 0) {
+                    turretBase.onKill(elb);
                 }
             } else {
                 movingobjectposition.entityHit.attackEntityFrom(new NormalDamageSource("disposable"), damage);
                 movingobjectposition.entityHit.hurtResistantTime = 0;
-            }
-            if (movingobjectposition.entityHit.isDead) {
-                turretBase.onKill(movingobjectposition.entityHit);
+
+                if (movingobjectposition.entityHit.isDead) {
+                    turretBase.onKill(movingobjectposition.entityHit);
+                }
             }
         }
-
 
         if (itemBound != null) {
             itemBound.setDead();

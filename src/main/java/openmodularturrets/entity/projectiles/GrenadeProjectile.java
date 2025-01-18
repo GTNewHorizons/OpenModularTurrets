@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -44,31 +43,34 @@ public class GrenadeProjectile extends TurretProjectile {
                 List<Entity> targets = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axis);
 
                 for (Entity mob : targets) {
-
                     int damage = ConfigHandler.getGrenadeTurretSettings().getDamage();
 
-                    if (isAmped) {
-                        if (mob instanceof EntityLivingBase) {
-                            EntityLivingBase elb = (EntityLivingBase) mob;
-                            damage += ((int) elb.getHealth() * (0.25 * amp_level));
-                        }
+                    if (isAmped && mob instanceof EntityLivingBase) {
+                        EntityLivingBase elb = (EntityLivingBase) mob;
+                        damage += ((int) elb.getHealth() * (0.25 * amp_level));
                     }
 
-                    if (mob instanceof EntityPlayer) {
-                        if (canDamagePlayer((EntityPlayer) mob)) {
-                            mob.attackEntityFrom(new NormalDamageSource("grenade"), damage * 0.9F);
-                            mob.attackEntityFrom(new ArmorBypassDamageSource("grenade"), damage * 0.1F);
-                            mob.hurtResistantTime = 0;
+                    if (mob instanceof EntityLivingBase) {
+                        EntityLivingBase elb = (EntityLivingBase) mob;
+                        float healthBefore = elb.getHealth();
+
+                        mob.attackEntityFrom(new NormalDamageSource("grenade"), damage * 0.9F);
+                        mob.attackEntityFrom(new ArmorBypassDamageSource("grenade"), damage * 0.1F);
+                        mob.hurtResistantTime = 0;
+
+                        float healthAfter = elb.getHealth();
+                        if (healthBefore > 0 && healthAfter <= 0) {
+                            turretBase.onKill(elb);
                         }
                     } else {
                         mob.attackEntityFrom(new NormalDamageSource("grenade"), damage * 0.9F);
                         mob.attackEntityFrom(new ArmorBypassDamageSource("grenade"), damage * 0.1F);
                         mob.hurtResistantTime = 0;
-                    }
-                    if (mob.isDead) {
-                        turretBase.onKill(mob);
-                    }
 
+                        if (mob.isDead) {
+                            turretBase.onKill(mob);
+                        }
+                    }
                 }
             }
             this.setDead();
