@@ -81,13 +81,7 @@ public class BlazingClayProjectile extends TurretProjectile {
                     EntityLivingBase elb = (EntityLivingBase) mob;
                     healthBefore = elb.getHealth();
 
-                    if (mob instanceof EntityPlayer) {
-                        if (canDamagePlayer((EntityPlayer) mob)) {
-                            elb.attackEntityFrom(new NormalDamageSource("bullet"), damage);
-                            elb.hurtResistantTime = 0;
-                            elb.setFire(5);
-                        }
-                    } else {
+                    if (!(mob instanceof EntityPlayer) || canDamagePlayer((EntityPlayer) player)) {
                         elb.attackEntityFrom(new NormalDamageSource("bullet"), damage);
                         elb.hurtResistantTime = 0;
                         elb.setFire(5);
