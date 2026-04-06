@@ -9,5 +9,5 @@ dependencies {
     devOnlyNonPublishable  'net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev'
     devOnlyNonPublishable ("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.408:dev")
     devOnlyNonPublishable ("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
-    devOnlyNonPublishable ("curse.maven:computercraft-67504:2269339")
+    devOnlyNonPublishable (rfg.deobf("curse.maven:computercraft-67504:2269339"))
 }
