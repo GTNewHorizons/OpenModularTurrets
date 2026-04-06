@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -27,11 +28,11 @@ public class TurretBaseTierFiveGui extends TurretBaseAbstractGui {
     protected void drawGuiContainerForegroundLayer(int param1, int param2) {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
-        fontRenderer.drawString("Addons:", 71, 6, 0);
-        fontRenderer.drawString("Ammo", 8, 6, 0);
-        fontRenderer.drawString("Inventory", 8, ySize - 97 + 4, 0);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.openmodularturrets.addons") + ":", 71, 6, 0);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.openmodularturrets.ammo"), 8, 6, 0);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 97 + 4, 0);
         fontRenderer.drawStringWithShadow("" + base.getyAxisDetect(), 127, 39, 40000);
-        fontRenderer.drawString("-Y", 123, 6, 0);
+        fontRenderer.drawString(StatCollector.translateToLocal("gui.openmodularturrets.y_string"), 123, 6, 0);
 
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
