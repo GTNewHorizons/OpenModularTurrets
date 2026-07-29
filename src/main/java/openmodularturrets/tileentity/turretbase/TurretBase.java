@@ -50,6 +50,7 @@ import thaumcraft.api.visnet.VisNetHandler;
         @Optional.Interface(iface = "thaumcraft.api.aspects.IAspectContainer", modid = "Thaumcraft"),
         @Optional.Interface(iface = "thaumcraft.api.aspects.IEssentiaTransport", modid = "Thaumcraft"),
         @Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IEnergyConnected", modid = "gregtech") })
+// don't change to gregtech_nh as the api also exists in gt6
 
 public abstract class TurretBase extends TileEntityContainer implements IEnergyHandler, SimpleComponent,
         ISidedInventory, IEssentiaTransport, IAspectContainer, IPeripheral, IEnergyConnected {
