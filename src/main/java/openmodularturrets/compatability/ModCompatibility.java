@@ -24,7 +24,7 @@ public class ModCompatibility {
     public static boolean OpenComputersLoaded = false;
     public static boolean ComputercraftLoaded = false;
     public static boolean IC2Loaded = false;
-    public static boolean GTLoaded = false;
+    public static boolean GT5uNHLoaded = false;
     private static Logger logger;
 
     public static void checkForMods() {
@@ -59,8 +59,8 @@ public class ModCompatibility {
         if (IC2Loaded) {
             logger.info("I'm not a doctor, but I think you have a case of IC2. (Found IC2)");
         }
-        GTLoaded = Loader.isModLoaded("gregtech");
-        if (GTLoaded) {
+        GT5uNHLoaded = Loader.isModLoaded("gregtech_nh");
+        if (Loader.isModLoaded("gregtech")) { // I feel like it should still say this with GT6
             logger.info("Oh you like doing things the hard way? (Found Gregtech)");
         }
     }
